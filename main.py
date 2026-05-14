@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
@@ -25,3 +26,7 @@ def chat_with_bot(request: ChatRequest):
         return {"bot_response": response.choices[0].message.content}
     except Exception as e:
         return {"error": str(e)}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="[IP_ADDRESS]", port=8000)
