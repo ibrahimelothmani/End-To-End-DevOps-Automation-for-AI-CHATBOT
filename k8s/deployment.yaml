@@ -1,9 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chatbot-api
+  name: chatbot-deployment
 spec:
-  replicas: 3 # Number of instances
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: chatbot
@@ -13,8 +18,7 @@ spec:
         app: chatbot
     spec:
       containers:
-      - name: chatbot
-        image: chatbot-api:latest
-        ports:
-        - containerPort: 8000
-
+        - name: chatbot
+          image: ${{ secrets.DOCKER_USERNAME }}/chatbot-api:latest
+          ports:
+            - containerPort: 8000
