@@ -22,3 +22,9 @@ spec:
           image: DOCKER_USERNAME/chatbot-api:latest
           ports:
             - containerPort: 8000
+          env:
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chatbot-secrets
+                  key: google-api-key
