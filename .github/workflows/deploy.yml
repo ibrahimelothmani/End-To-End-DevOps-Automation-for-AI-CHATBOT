@@ -42,13 +42,16 @@ jobs:
         needs: docker-build
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v3
             - name: Set up Kubectl
               uses: azure/setup-kubectl@v4
               with:
                 version: 'latest'
-            - name: Apply Kubernetes Deployment
+            - name: Prepare and Apply Kubernetes Manifests
               run: |
-                kubectl apply -f deployment.yaml
+                sed -i "s|DOCKER_USERNAME|${{ secrets.DOCKER_USERNAME }}|g" k8s/deployment.yaml
+                kubectl apply -f k8s/
                 kubectl rollout restart deployment chatbot-deployment
     
     notification:
