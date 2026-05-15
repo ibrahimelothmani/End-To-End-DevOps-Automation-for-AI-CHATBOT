@@ -49,3 +49,22 @@ jobs:
               run: |
                 kubectl apply -f deployment.yaml
                 kubectl rollout restart deployment chatbot-deployment
+    
+    notification:
+      needs: deploy
+      runs-on: ubuntu-latest
+      if: success()
+      steps:
+        - name: Send Telegram Notification
+          uses: appleboy/telegram-action@v1.0.0
+          with:
+            token: ${{ secrets.TELEGRAM_TOKEN }}
+            to: ${{ secrets.TELEGRAM_CHAT_ID }}
+            message: "Deployment successful!"
+
+        - name: Notify Slack
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_MESSAGE: "Chatbot API has been deployed successfully! 🚀"
+      
